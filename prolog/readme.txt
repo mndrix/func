@@ -19,6 +19,9 @@ if they were functions.  For these purposes, a function is any
 predicate whose final argument can be an "output" and whose
 penultimate argument can be an "input".
 
+Experimentally, any arithmetic expression of a single argument
+(such as =|2*_+3|=) can also be treated as a function.
+
 Repository available on GitHub: https://github.com/mndrix/func
 
 ---+ Installation
