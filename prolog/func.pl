@@ -1,12 +1,28 @@
 :- module(func, [ op(675, xfy, $)
                 , op(650, xfy, of)
+                , $/2
+                , of/2
                 ]).
 :- use_module(library(list_util), [xfy_list/3]).
 :- use_module(library(function_expansion)).
 :- use_module(library(arithmetic)).
 
 
-% for the cross-referencer. removed during macro expansion
+% for the cross-referencer and PlDoc. removed during macro expansion
+
+%%	$(+Function, +Argument) is det.
+%
+%	Apply Function to an Argument.  A Function is any predicate
+%	whose final argument generates output and whose penultimate argument
+%	accepts input.
+%
+%	This is realized by expanding function application to chained
+%	predicate calls at compile time.  Function application itself can
+%	be chained.
+%
+%	==
+%	Reversed = reverse $ sort $ [c,d,b].
+%	==
 :- meta_predicate $(2,+).
 $(_,_).
 
@@ -25,7 +41,18 @@ user:function_expansion($(F,X), Y, Apply) :-  % basic functions
     Apply =.. [Functor|NewArgs].
 
 
-% for the cross-referencer.  removed during macro expansion
+% for the cross-referencer and PlDoc.  removed during macro expansion
+
+%%	of(+F, +G) is det.
+%
+%	Creates a new function by composing F and G.  The functions are
+%	composed at compile time to create a new, compiled predicate which
+%	behaves like a function.  Function composition can be chained.
+%	Composed functions can also be applied with $/2.
+%
+%	==
+%	Reversed = reverse of sort $ [c,d,b].
+%	==
 :- meta_predicate of(2,2).
 of(_,_).
 
