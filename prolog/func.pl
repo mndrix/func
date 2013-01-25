@@ -11,10 +11,9 @@ $(_,_).
 
 % Y is the result of applying function F to argument X
 user:function_expansion($(F,X), Y, Apply) :-  % basic functions
-    (   functor(F, 'of', 2)
-    ->  user:function_expansion(F, of_dcg(Id), true),
-        Functor = of_dcg,
-        Args = [Id]
+    (   function_composition_term(F)
+    ->  user:function_expansion(F, Functor, true),
+        Args = []
     ;   F =.. [Functor|Args]
     ),
     append(Args, [X, Y], NewArgs),
@@ -24,16 +23,25 @@ user:function_expansion($(F,X), Y, Apply) :-  % basic functions
 :- meta_predicate of(2,2).
 of(_,_).
 
-user:function_expansion(Term, of_dcg(Id), true) :-
-    functor(Term, 'of', 2),
-    format('considering ~p~n', [Term]),
-    xfy_list('of', Term, Funcs),
+% True if the argument is a function composition term
+function_composition_term(of(_,_)).
+
+% Converts a function composition term into a list of functions to compose
+functions_to_compose(Term, Funcs) :-
+    functor(Term, Op, 2),
+    Op = 'of',
+    xfy_list(Op, Term, Funcs).
+
+user:function_expansion(Term, Functor, true) :-
+    functions_to_compose(Term, Funcs),
     xfy_list(',', DcgBody, reverse $ Funcs),
-    term_hash(Funcs, Id),
-    format('expanding of_dcg(~p) --> ~p~n', [Id, DcgBody]),
-    dcg_translate_rule((of_dcg(Id) --> DcgBody), Rule),
-    writeln('  asserting'),
-    func:assertz(Rule).
+    format(atom(Functor), 'composed_function_~d', [term_hash $ Funcs]),
+    (   func:current_predicate(Functor/2)
+    ->  true  % predicate implementing this composition already exists
+    ;   dcg_translate_rule((Functor --> DcgBody), Rule),
+        func:assert(Rule),
+        func:compile_predicates([Functor/2])
+    ).
 
 
 normal :-
