@@ -43,15 +43,34 @@ user:function_expansion(Term, Functor, true) :-
         func:compile_predicates([Functor/2])
     ).
 
+:- begin_tests(apply).
+test(single) :-
+    X = succ $ 41,
+    X = 42.
+test(multiple) :-
+    X = plus(5) $ succ $ 10,
+    16 = X.
+:- end_tests(apply).
 
-normal :-
-    plus(10, 30, A),
-    succ(A, B),
-    succ(B, C),
-    writeln(C).
+:- begin_tests(compose).
+test(two) :-
+    F = succ of plus(2),
+    call(F, 4, Y),
+    Y = 7.
+test(multiple) :-
+    call(succ of succ of succ, 0, 3).
+test(idempotent) :-
+    F = plus(3) of plus(1),
+    G = plus(3) of plus(1),
+    G = F,
+    call(F, 1, X),
+    call(G, 1, X).
+:- end_tests(compose).
 
-applied :-
-    writeln(succ $ succ $ plus(10) $ 30).
-
-composed :-
-    writeln(succ of succ of plus(10) $ 30).
+:- begin_tests(compose_apply).
+test(typical) :-
+    format(codes(A), '~s world', [reverse of atom_codes $ ih]),
+    A = "hi world".
+test(numeric) :-
+    10 = plus(1) of plus(3) of succ $ 5.
+:- end_tests(compose_apply).
