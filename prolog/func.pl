@@ -10,14 +10,16 @@
 $(_,_).
 
 % Y is the result of applying function F to argument X
+user:function_expansion($(F,X), Y, func:Apply) :-  % basic functions
+    func:function_composition_term(F),
+    function_expansion(F, func:Functor, true),
+    Apply =.. [Functor,X,Y].
 user:function_expansion($(F,X), Y, Apply) :-  % basic functions
-    (   function_composition_term(F)
-    ->  user:function_expansion(F, Functor, true),
-        Args = []
-    ;   F =.. [Functor|Args]
-    ),
+    \+ func:function_composition_term(F),
+    F =.. [Functor|Args],
     append(Args, [X, Y], NewArgs),
     Apply =.. [Functor|NewArgs].
+
 
 % for the cross-referencer.  removed during macro expansion
 :- meta_predicate of(2,2).
@@ -32,7 +34,7 @@ functions_to_compose(Term, Funcs) :-
     Op = 'of',
     xfy_list(Op, Term, Funcs).
 
-user:function_expansion(Term, Functor, true) :-
+user:function_expansion(Term, func:Functor, true) :-
     functions_to_compose(Term, Funcs),
     xfy_list(',', DcgBody, reverse $ Funcs),
     format(atom(Functor), 'composed_function_~d', [term_hash $ Funcs]),
@@ -50,6 +52,8 @@ test(single) :-
 test(multiple) :-
     X = plus(5) $ succ $ 10,
     16 = X.
+test(arithmetic) :-
+    8 =:= 2*(succ $ 3).
 :- end_tests(apply).
 
 :- begin_tests(compose).
