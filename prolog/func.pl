@@ -1,5 +1,5 @@
-:- module(func, [ op(800, xfy, $)
-                , op(750, xfy, of)
+:- module(func, [ op(675, xfy, $)
+                , op(650, xfy, of)
                 ]).
 :- use_module(library(list_util), [xfy_list/3]).
 :- use_module(library(function_expansion)).
