@@ -1,7 +1,7 @@
 :- module(func, [ op(675, xfy, $)
                 , op(650, xfy, of)
-                , $/2
-                , of/2
+                , '$'/2
+                , 'of'/2
                 ]).
 :- use_module(library(list_util), [xfy_list/3]).
 :- use_module(library(function_expansion)).
