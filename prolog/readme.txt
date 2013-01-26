@@ -5,7 +5,7 @@
 ---+ Synopsis
 
 ==
-:- use_module(func, [op(675,xfy,$), op(650,xfy,of)]).
+:- use_module(library(func)).
 main :-
     Plus3 = succ of _+1 of plus(1),
     call(Plus3, 1, 4),

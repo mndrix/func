@@ -1,5 +1,5 @@
 #!/usr/bin/env swipl -q -t main -s
-:- use_module(func, [op(675,xfy,$),op(650,xfy,of)]).
+:- use_module(func).
 
 main :-
     format('~s world~n', [atom_codes $ hello]),
