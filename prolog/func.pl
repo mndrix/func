@@ -2,13 +2,14 @@
                 , op(650, xfy, of)
                 , '$'/2
                 , 'of'/2
+                , compile_function/4
                 ]).
 :- use_module(library(list_util), [xfy_list/3]).
 :- use_module(library(function_expansion)).
 :- use_module(library(arithmetic)).
-:- use_module(library(error), [domain_error/2]).
+:- use_module(library(error)).
 
-%%  compile_function(+Term:nonvar, -In, -Out, -Goal) is semidet.
+%%  compile_function(+Term, -In, -Out, -Goal) is semidet.
 %
 %   True if Term represents a function from In to Out
 %   implemented by calling Goal.  This multifile hook is
@@ -16,9 +17,11 @@
 %   It's used during compile time for macro expansion.
 %   It's used during run time to handle functions which aren't
 %   known at compile time.
+%   When called as a hook, Term is guaranteed to be =nonvar=.
+
 :- multifile compile_function/4.
 compile_function(Var, _, _, _) :-
-    % variables as functions must be evaluated at run time
+    % variables storing functions must be evaluated at run time
     % and can't be compiled, a priori, into a goal
     var(Var),
     !,
@@ -58,7 +61,7 @@ user:function_expansion($(F,X), Y, Goal) :-
     ; var(F) -> Goal =      % defer until run time
         ( compile_function(F, X, Y, P) ->
             call(P)
-        ; domain_error(function, F)
+        ; call(F, X, Y)
         )
     ; Goal = call(F, X, Y)
     ).
