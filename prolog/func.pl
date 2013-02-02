@@ -82,24 +82,6 @@ user:function_expansion($(F,X), Y, Goal) :-
 :- meta_predicate of(2,2).
 of(_,_).
 
-% Converts an evaluable arithmetic expression of one variable
-% into a predicate of two variables.  For all else, F=P.
-% Identical expressions are compiled only once.
-to_predicate(F,P) :-
-    arithmetic:evaluable(F),
-    !,
-    term_variables(F, [X]),
-    variant_sha1(F, Hash),  % term_hash/2 supports only ground terms
-    format(atom(P), 'arithmetic_function_~p', [Hash]),
-    (   current_predicate(P/2)
-    ->  true  % predicate already exists
-    ;   Head =.. [P,X,Y],
-        assert((Head :- Y is F)),
-        compile_predicates([P/2])
-    ).
-to_predicate(F,F).
-
-
 % True if the argument is a function composition term
 function_composition_term(of(_,_)).
 
@@ -107,17 +89,31 @@ function_composition_term(of(_,_)).
 functions_to_compose(Term, Funcs) :-
     functor(Term, Op, 2),
     Op = 'of',
-    xfy_list(Op, Term, Raw),
-    maplist(to_predicate, Raw, Funcs).
+    xfy_list(Op, Term, Funcs).
+
+% Thread a state variable through a list of functions.  This is similar
+% to a DCG expansion, but much simpler.
+thread_state([], [], Out, Out).
+thread_state([F|Funcs], [Goal|Goals], In, Out) :-
+    ( compile_function(F, In, Tmp, Goal) ->
+        true
+    ; var(F) ->
+        instantiation_error(F)
+    ; F =.. [Functor|Args],
+      append(Args, [In, Tmp], NewArgs),
+      Goal =.. [Functor|NewArgs]
+    ),
+    thread_state(Funcs, Goals, Tmp, Out).
 
 user:function_expansion(Term, func:Functor, true) :-
     functions_to_compose(Term, Funcs),
-    xfy_list(',', DcgBody, reverse $ Funcs),
-    format(atom(Functor), 'composed_function_~d', [term_hash $ Funcs]),
+    format(atom(Functor), 'composed_function_~w', [variant_sha1 $ Funcs]),
     (   func:current_predicate(Functor/2)
     ->  true  % predicate implementing this composition already exists
-    ;   dcg_translate_rule((Functor --> DcgBody), Rule),
-        func:assert(Rule),
+    ;   thread_state(reverse $ Funcs, Threaded, In, Out),
+        xfy_list(',', Body, Threaded),
+        Head =.. [Functor, In, Out],
+        func:assert(Head :- Body),
         func:compile_predicates([Functor/2])
     ).
 
