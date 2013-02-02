@@ -6,6 +6,32 @@
 :- use_module(library(list_util), [xfy_list/3]).
 :- use_module(library(function_expansion)).
 :- use_module(library(arithmetic)).
+:- use_module(library(error), [domain_error/2]).
+
+%%  compile_function(+Term:nonvar, -In, -Out, -Goal) is semidet.
+%
+%   True if Term represents a function from In to Out
+%   implemented by calling Goal.  This multifile hook is
+%   called by $/2 and of/2 to convert a term into a goal.
+%   It's used during compile time for macro expansion.
+%   It's used during run time to handle functions which aren't
+%   known at compile time.
+:- multifile compile_function/4.
+compile_function(Var, _, _, _) :-
+    % variables as functions must be evaluated at run time
+    % and can't be compiled, a priori, into a goal
+    var(Var),
+    !,
+    fail.
+compile_function(Expr, In, Out, Out is Expr) :-
+    % arithmetic expression of one variable are simply evaluated
+    arithmetic:evaluable(Expr),
+    term_variables(Expr, [In]).
+compile_function(F, In, Out, func:Goal) :-
+    % composed functions
+    function_composition_term(F),
+    user:function_expansion(F, func:Functor, true),
+    Goal =.. [Functor,In,Out].
 
 
 % for the cross-referencer and PlDoc. removed during macro expansion
@@ -26,19 +52,16 @@
 :- meta_predicate $(2,+).
 $(_,_).
 
-user:function_expansion($(F,X), Y, Y is F) :-  % single var arithmetic functions
-    arithmetic:evaluable(F),
-    !,
-    term_variables(F, [X]).
-user:function_expansion($(F,X), Y, func:Apply) :-  % composed functions
-    func:function_composition_term(F),
-    function_expansion(F, func:Functor, true),
-    Apply =.. [Functor,X,Y].
-user:function_expansion($(F,X), Y, Apply) :-  % basic functions
-    \+ func:function_composition_term(F),
-    F =.. [Functor|Args],
-    append(Args, [X, Y], NewArgs),
-    Apply =.. [Functor|NewArgs].
+user:function_expansion($(F,X), Y, Goal) :-
+    ( compile_function(F, X, Y, Goal) ->
+        true
+    ; var(F) -> Goal =      % defer until run time
+        ( compile_function(F, X, Y, P) ->
+            call(P)
+        ; domain_error(function, F)
+        )
+    ; Goal = call(F, X, Y)
+    ).
 
 
 % for the cross-referencer and PlDoc.  removed during macro expansion
