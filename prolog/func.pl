@@ -35,7 +35,26 @@ compile_function(F, In, Out, func:Goal) :-
     function_composition_term(F),
     user:function_expansion(F, func:Functor, true),
     Goal =.. [Functor,In,Out].
+compile_function(F, In, Out, Goal) :-
+    % string interpolation via format templates
+    format_template(F),
+    ( atom(F) ->
+        Goal = format(atom(Out), F, In)
+    ; error:has_type(codes, F) ->
+        Goal = format(codes(Out), F, In)
+    ; fail  % to be explicit
+    ).
 
+
+% True if Format is a template string suitable for format/3.
+% The current check is very naive and should be improved.
+format_template(Format) :-
+    atom(Format), !,
+    atom_codes(Format, Codes),
+    format_template(Codes).
+format_template(Format) :-
+    error:has_type(codes, Format),
+    memberchk(0'~, Format).  % ' fix syntax highlighting
 
 % for the cross-referencer and PlDoc. removed during macro expansion
 
@@ -129,6 +148,11 @@ test(arithmetic) :-
 test(evaluable_functions) :-
     X = _+1 $ 0,
     X =:= 1.
+test(interpolation) :-
+    One = 'hello ~w' $ world,
+    One = 'hello world',
+    Two = '1 ~d ~d 4' $ [2, 3],
+    Two = '1 2 3 4'.
 :- end_tests(apply).
 
 :- begin_tests(compose).
@@ -155,4 +179,8 @@ test(typical) :-
     A = "hi world".
 test(numeric) :-
     10 = plus(1) of plus(3) of succ $ 5.
+test(interpolation) :-
+    F = 'hello ~w' of downcase_atom,
+    call(F, 'WoRLd', Msg),
+    Msg = 'hello world'.
 :- end_tests(compose_apply).
