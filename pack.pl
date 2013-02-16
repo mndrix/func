@@ -1,5 +1,5 @@
 name(func).
-version('0.0.2').
+version('0.1.0').
 title('Function application and composition').
 
 requires(function_expansion).
@@ -10,4 +10,4 @@ packager('Michael Hendricks','michael@ndrix.org').
 maintainer('Michael Hendricks','michael@ndrix.org').
 
 home('http://packs.ndrix.com/func/index.html').
-download('http://packs.ndrix.com/func/func-0.0.2.tgz').
+download('http://packs.ndrix.com/func/func-0.1.0.tgz').
