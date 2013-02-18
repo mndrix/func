@@ -17,7 +17,6 @@
 %   It's used during run time to handle functions which aren't
 %   known at compile time.
 %   When called as a hook, Term is guaranteed to be =nonvar=.
-
 :- multifile compile_function/4.
 compile_function(Var, _, _, _) :-
     % variables storing functions must be evaluated at run time
@@ -43,19 +42,6 @@ compile_function(F, In, Out, Goal) :-
         Goal = format(codes(Out), F, In)
     ; fail  % to be explicit
     ).
-
-
-% True if Format is a template string suitable for format/3.
-% The current check is very naive and should be improved.
-format_template(Format) :-
-    atom(Format), !,
-    atom_codes(Format, Codes),
-    format_template(Codes).
-format_template(Format) :-
-    error:has_type(codes, Format),
-    memberchk(0'~, Format).  % ' fix syntax highlighting
-
-% for the cross-referencer and PlDoc. removed during macro expansion
 
 %%	$(+Function, +Argument) is det.
 %
@@ -99,6 +85,20 @@ user:function_expansion($(F,X), Y, Goal) :-
 %	==
 :- meta_predicate of(2,2).
 of(_,_).
+
+
+%%  format_template(Format) is semidet.
+%
+%   True if Format is a template string suitable for format/3.
+%   The current check is very naive and should be improved.
+format_template(Format) :-
+    atom(Format), !,
+    atom_codes(Format, Codes),
+    format_template(Codes).
+format_template(Format) :-
+    error:has_type(codes, Format),
+    memberchk(0'~, Format).  % ' fix syntax highlighting
+
 
 % True if the argument is a function composition term
 function_composition_term(of(_,_)).
