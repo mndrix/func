@@ -87,8 +87,6 @@ user:function_expansion($(F,X), Y, Goal) :-
     ).
 
 
-% for the cross-referencer and PlDoc.  removed during macro expansion
-
 %%	of(+F, +G) is det.
 %
 %	Creates a new function by composing F and G.  The functions are
