@@ -72,7 +72,9 @@ format_template(Format) :-
 %	Reversed = reverse $ sort $ [c,d,b].
 %	==
 :- meta_predicate $(2,+).
-$(_,_).
+$(_,_) :-
+    throw(error(permission_error(call, predicate, ($)/2),
+          context(_, '$/2 must be subject to goal expansion'))).
 
 user:function_expansion($(F,X), Y, Goal) :-
     ( compile_function(F, X, Y, Goal) ->
