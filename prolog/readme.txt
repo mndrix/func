@@ -113,7 +113,7 @@ Using SWI-Prolog 6.3 or later:
 
 ==
     $ swipl
-    1 ?- pack_install(function_expansion).
+    1 ?- pack_install(func).
 ==
 
 Source code available and pull requests accepted on GitHub:
