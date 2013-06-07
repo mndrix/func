@@ -1,5 +1,4 @@
-#!/usr/bin/env swipl -q -t main -s
-:- use_module(func).
+:- use_module(library(func)).
 :- nb_setval(tap_test_count, 0).
 
 :- multifile func:compile_function/4.
