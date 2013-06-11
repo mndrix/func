@@ -36,5 +36,5 @@ factorial :-
     fact(7,Factorial),
     Factorial =:= 5040.
 
-'negative factorial'(fails) :-
+'negative factorial'(fail) :-
     fact(-3, _).
