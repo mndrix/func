@@ -17,6 +17,19 @@
 %   It's used at run time to handle functions which aren't
 %   known at compile time.
 %   When called as a hook, Term is guaranteed to be =nonvar=.
+%
+%   For example, to treat library(assoc) terms as functions which
+%   map a key to a value, one might define:
+%
+%       :- multifile compile_function/4.
+%       compile_function(Assoc, Key, Value, Goal) :-
+%           is_assoc(Assoc),
+%           Goal = get_assoc(Key, Assoc, Value).
+%
+%   Then one could write:
+%
+%       list_to_assoc([a-1, b-2, c-3], Assoc),
+%       Two = Assoc $ b,
 :- multifile compile_function/4.
 compile_function(Var, _, _, _) :-
     % variables storing functions must be evaluated at run time
