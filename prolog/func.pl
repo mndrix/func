@@ -13,8 +13,8 @@
 %   True if Term represents a function from In to Out
 %   implemented by calling Goal.  This multifile hook is
 %   called by $/2 and of/2 to convert a term into a goal.
-%   It's used during compile time for macro expansion.
-%   It's used during run time to handle functions which aren't
+%   It's used at compile time for macro expansion.
+%   It's used at run time to handle functions which aren't
 %   known at compile time.
 %   When called as a hook, Term is guaranteed to be =nonvar=.
 :- multifile compile_function/4.
