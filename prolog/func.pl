@@ -1,7 +1,7 @@
-:- module(func, [ op(675, xfy, $)
-                , op(650, xfy, of)
-                , '$'/2
-                , 'of'/2
+:- module(func, [ op(675, xfy, ($))
+                , op(650, xfy, (of))
+                , ($)/2
+                , (of)/2
                 ]).
 :- use_module(library(list_util), [xfy_list/3]).
 :- use_module(library(function_expansion)).
@@ -119,7 +119,7 @@ function_composition_term(of(_,_)).
 % Converts a function composition term into a list of functions to compose
 functions_to_compose(Term, Funcs) :-
     functor(Term, Op, 2),
-    Op = 'of',
+    Op = (of),
     xfy_list(Op, Term, Funcs).
 
 % Thread a state variable through a list of functions.  This is similar
