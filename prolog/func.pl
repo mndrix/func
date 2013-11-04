@@ -138,10 +138,13 @@ thread_state([F|Funcs], [Goal|Goals], In, Out) :-
 
 user:function_expansion(Term, func:Functor, true) :-
     functions_to_compose(Term, Funcs),
-    format(atom(Functor), 'composed_function_~w', [variant_sha1 $ Funcs]),
-    (   func:current_predicate(Functor/2)
-    ->  true  % predicate implementing this composition already exists
-    ;   thread_state(reverse $ Funcs, Threaded, In, Out),
+    variant_sha1(Funcs, Sha),
+    format(atom(Functor), 'composed_function_~w', [Sha]),
+    ( func:current_predicate(Functor/2) ->
+        true  % predicate implementing this composition already exists
+    ; true ->
+        reverse(Funcs, RevFuncs),
+        thread_state(RevFuncs, Threaded, In, Out),
         xfy_list(',', Body, Threaded),
         Head =.. [Functor, In, Out],
         func:assert(Head :- Body),
