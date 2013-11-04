@@ -8,6 +8,15 @@
 :- use_module(library(arithmetic)).
 :- use_module(library(error)).
 
+
+% true if the module whose terms are being read has specifically
+% imported library(func).
+wants_func :-
+    prolog_load_context(module, Module),
+    Module \== func,  % we don't want func sugar ourselves
+    predicate_property(Module:of(_,_),imported_from(func)).
+
+
 %%  compile_function(+Term, -In, -Out, -Goal) is semidet.
 %
 %   True if Term represents a function from In to Out
@@ -75,6 +84,7 @@ $(_,_) :-
           context(_, '$/2 must be subject to goal expansion'))).
 
 user:function_expansion($(F,X), Y, Goal) :-
+    wants_func,
     ( compile_function(F, X, Y, Goal) ->
         true
     ; var(F) -> Goal =      % defer until run time
@@ -137,6 +147,7 @@ thread_state([F|Funcs], [Goal|Goals], In, Out) :-
     thread_state(Funcs, Goals, Tmp, Out).
 
 user:function_expansion(Term, func:Functor, true) :-
+    wants_func,
     functions_to_compose(Term, Funcs),
     debug(func, 'building composed function for: ~w', [Term]),
     variant_sha1(Funcs, Sha),
