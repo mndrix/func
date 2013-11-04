@@ -138,10 +138,12 @@ thread_state([F|Funcs], [Goal|Goals], In, Out) :-
 
 user:function_expansion(Term, func:Functor, true) :-
     functions_to_compose(Term, Funcs),
+    debug(func, 'building composed function for: ~w', [Term]),
     variant_sha1(Funcs, Sha),
     format(atom(Functor), 'composed_function_~w', [Sha]),
+    debug(func, '  name: ~s', [Functor]),
     ( func:current_predicate(Functor/2) ->
-        true  % predicate implementing this composition already exists
+        debug(func, '  composed predicate already exists', [])
     ; true ->
         reverse(Funcs, RevFuncs),
         thread_state(RevFuncs, Threaded, In, Out),
