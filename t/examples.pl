@@ -16,7 +16,7 @@ fact(N,F) :-
 
 'hello world' :-
     X = atom_codes $ hello,
-    X = "hello".
+    X = [0'h, 0'e, 0'l, 0'l, 0'o].
 
 plus3 :-
     Plus3 = succ of _+1 of plus(1),

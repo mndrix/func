@@ -2,7 +2,7 @@
 :- use_module(library(tap)).
 
 typical :-
-    format(codes(A), '~s world', [reverse of atom_codes $ ih]),
+    format(string(A), '~s world', [reverse of atom_codes $ ih]),
     A = "hi world".
 
 numeric :-
