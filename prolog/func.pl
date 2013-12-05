@@ -85,10 +85,10 @@ $(_,_) :-
 
 user:function_expansion($(F,X), Y, Goal) :-
     wants_func,
-    ( compile_function(F, X, Y, Goal) ->
+    ( func:compile_function(F, X, Y, Goal) ->
         true
     ; var(F) -> Goal =      % defer until run time
-        ( compile_function(F, X, Y, P) ->
+        ( func:compile_function(F, X, Y, P) ->
             call(P)
         ; call(F, X, Y)
         )
