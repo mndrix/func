@@ -23,3 +23,9 @@ evaluable_functions :-
 'silly atom_codes' :-
     AtomCodes = string_codes of atom_string,
     call(AtomCodes, hi, [0'h, 0'i]).
+
+dicts :-
+    Lookup = greek{a: alpha, b: beta} of roman{1: a, 2: b},
+    call(Lookup, 1, alpha),
+    call(Lookup, 2, beta),
+    \+ call(Lookup, 3, _).

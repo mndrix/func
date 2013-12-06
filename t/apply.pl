@@ -27,3 +27,12 @@ tilde :-
     X =:= 5,
     atom_number(A, ~ is 3 + X),
     A == '8'.
+
+dicts :-
+    John = person{ name: "John", age: 27 },
+    "John" == John $ name,
+    27 =:= John $ age.
+
+'dict missing a key'(fail) :-
+    Point = point{x:2, y:3},
+    writeln(Point $ z).  % looking up z fails

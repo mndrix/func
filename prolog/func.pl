@@ -64,6 +64,9 @@ compile_function(F, In, Out, Goal) :-
         Goal = format(codes(Out), F, In)
     ; fail  % to be explicit
     ).
+compile_function(Dict, In, Out, Goal) :-
+    is_dict(Dict),
+    Goal = get_dict(In, Dict, Out).
 
 %%	$(+Function, +Argument) is det.
 %

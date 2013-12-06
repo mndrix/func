@@ -50,6 +50,18 @@ before "outputs", many predicates can be applied and composed as
 functions as is.  This includes length/2, reverse/2, maplist/3,
 append/3, etc.
 
+## Dicts
+
+An SWI-Prolog 7 dictionary is considered a function from its keys to its values.  Applying the function to a non-existent key fails.
+
+    ?- writeln(words{1:one, 2:two, 3:three} $ 2).
+    two
+    ?- writeln(words{1:one, 2:two, 3:three} $ 4).
+    false.
+
+This is similar to SWI Prolog's dot notation but doesn't throw an exception for missing keys.  Dicts as functions can be composed and applied just like other functions.
+
+
 ## Arithmetic expressions of one variable
 
 Any arithmetic expression of a single variable can be applied and
