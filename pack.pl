@@ -1,6 +1,8 @@
 name(func).
-version('0.2.0').
 title('Function application and composition').
+
+version('0.3.0').
+download('http://packs.ndrix.com/func/func-0.3.0.tgz').
 
 requires(function_expansion).
 requires(list_util).
@@ -10,4 +12,3 @@ packager('Michael Hendricks','michael@ndrix.org').
 maintainer('Michael Hendricks','michael@ndrix.org').
 
 home('http://packs.ndrix.com/func/index.html').
-download('http://packs.ndrix.com/func/func-0.2.0.tgz').

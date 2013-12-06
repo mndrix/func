@@ -125,10 +125,10 @@ hash tables, etc.
 
 # Changes in this Version
 
-  * Only apply func sugar to modules that request it
-  * Improved documentation
-  * Improved test suite
-  * Improved pack layout
+  * Support $/2 at the top level
+  * Support "tilde terms" as functions
+  * Support dicts as functions
+  * Fix test suite for SWI 7
 
 # Installation
 
