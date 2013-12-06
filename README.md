@@ -74,6 +74,23 @@ One might also use this interpolation syntax to build a file path:
 
     Path = "/home/~w/src/~w/.git/config" $ [User, Project]
 
+## Tilde Terms
+
+A compound term with a single `~` argument is considered a function which takes no input values and produces an output at the `~` position.  For example,
+
+    atom(atom_string(~,"hello world")).
+
+produces code that's equivalent to
+
+    atom_string(X,"hello world"),
+    atom(X).
+
+This can be conveniently employed with arithmetic expressions.
+
+    length(List, ~ is X + Y).
+
+Because tilde terms take no inputs, they can't be used with $/2 or of/2.
+
 # Defining functions
 
 Any term can behave as a function by defining additional clauses for

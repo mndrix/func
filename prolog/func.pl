@@ -163,3 +163,21 @@ user:function_expansion(Term, func:Functor, true) :-
         func:assert(Head :- Body),
         func:compile_predicates([Functor/2])
     ).
+
+
+% support foo(x,~,y) evaluation
+user:function_expansion(Term, Output, Goal) :-
+    wants_func,
+    compound(Term),
+
+    % has a single ~ argument
+    setof( X
+         , ( arg(X,Term,Arg), Arg == '~' )
+         , [N]
+         ),
+
+    % replace ~ with a variable
+    Term =.. [Name|Args0],
+    nth1(N, Args0, ~, Rest),
+    nth1(N, Args, Output, Rest),
+    Goal =.. [Name|Args].

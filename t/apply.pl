@@ -21,3 +21,9 @@ interpolation :-
     One = 'hello world',
     Two = '1 ~d ~d 4' $ [2, 3],
     Two = '1 2 3 4'.
+
+tilde :-
+    X is 2 + atom_length(foo,~),
+    X =:= 5,
+    atom_number(A, ~ is 3 + X),
+    A == '8'.
