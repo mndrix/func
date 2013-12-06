@@ -19,3 +19,7 @@ idempotent :-
 evaluable_functions :-
     Plus3 = succ of _+1 of plus(1),
     call(Plus3, 0, 3).
+
+'silly atom_codes' :-
+    AtomCodes = string_codes of atom_string,
+    call(AtomCodes, hi, [0'h, 0'i]).
