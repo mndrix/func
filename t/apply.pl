@@ -18,9 +18,13 @@ evaluable_functions :-
 
 interpolation :-
     One = 'hello ~w' $ world,
-    One = 'hello world',
+    One == 'hello world',
     Two = '1 ~d ~d 4' $ [2, 3],
-    Two = '1 2 3 4'.
+    Two == '1 2 3 4',
+    Three = "~w quotes" $ double,
+    Three == "double quotes",
+    Four = `back~w` $ ticks,
+    Four == `backticks`.
 
 tilde :-
     X is 2 + atom_length(foo,~),

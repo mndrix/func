@@ -73,7 +73,8 @@ three different places.
 ## format/2 templates
 
 A format string acceptable as the first argument to format/2 can be
-used as a function.  It generates an atom or list of codes as output.
+used as a function.  It generates an atom, list of codes or string
+as output.
 The template's type determines the output's type.  This offers a
 powerful string interpolation syntax visually similar to Python's.
 

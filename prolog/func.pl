@@ -48,6 +48,7 @@ compile_function(Var, _, _, _) :-
     fail.
 compile_function(Expr, In, Out, Out is Expr) :-
     % arithmetic expression of one variable are simply evaluated
+    \+ string(Expr),  % evaluable/1 throws exception with strings
     arithmetic:evaluable(Expr),
     term_variables(Expr, [In]).
 compile_function(F, In, Out, func:Goal) :-
@@ -60,6 +61,8 @@ compile_function(F, In, Out, Goal) :-
     format_template(F),
     ( atom(F) ->
         Goal = format(atom(Out), F, In)
+    ; string(F) ->
+        Goal = format(string(Out), F, In)
     ; error:has_type(codes, F) ->
         Goal = format(codes(Out), F, In)
     ; fail  % to be explicit
@@ -120,6 +123,11 @@ of(_,_).
 format_template(Format) :-
     atom(Format), !,
     atom_codes(Format, Codes),
+    format_template(Codes).
+format_template(Format) :-
+    string(Format),
+    !,
+    string_codes(Format, Codes),
     format_template(Codes).
 format_template(Format) :-
     error:has_type(codes, Format),
