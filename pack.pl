@@ -1,8 +1,8 @@
 name(func).
 title('Function application and composition').
 
-version('0.3.0').
-download('http://packs.ndrix.com/func/func-0.3.0.tgz').
+version('0.4.0').
+download('http://packs.ndrix.com/func/func-0.4.0.tgz').
 
 requires(function_expansion).
 requires(list_util).
