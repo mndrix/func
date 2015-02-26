@@ -68,6 +68,7 @@ compile_function(F, In, Out, Goal) :-
     ; fail  % to be explicit
     ).
 compile_function(Dict, In, Out, Goal) :-
+    current_predicate(system:is_dict/1),
     is_dict(Dict),
     Goal = get_dict(In, Dict, Out).
 
