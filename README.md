@@ -139,7 +139,3 @@ Using SWI-Prolog 6.3 or later:
 
 Source code available and pull requests accepted on GitHub:
 https://github.com/mndrix/func
-
-
-@author Michael Hendricks <michael@ndrix.org>
-@license BSD
