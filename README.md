@@ -124,10 +124,6 @@ We might use it to convert small integers into English words:
 One might imagine similar definitions for assoc lists, binary trees,
 hash tables, etc.
 
-# Changes in this Version
-
-  * Support strings as format/2 template functions
-
 # Installation
 
 Using SWI-Prolog 6.3 or later:
