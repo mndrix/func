@@ -158,7 +158,7 @@ thread_state([F|Funcs], [Goal|Goals], In, Out) :-
     ),
     thread_state(Funcs, Goals, Tmp, Out).
 
-user:function_expansion(Term, func:Functor, true) :-
+user:function_expansion(Term, M:Functor, true) :-
     wants_func,
     functions_to_compose(Term, Funcs),
     debug(func, 'building composed function for: ~w', [Term]),
@@ -172,8 +172,9 @@ user:function_expansion(Term, func:Functor, true) :-
         thread_state(RevFuncs, Threaded, In, Out),
         xfy_list(',', Body, Threaded),
         Head =.. [Functor, In, Out],
-        func:assert(Head :- Body),
-        func:compile_predicates([Functor/2])
+        prolog_load_context(module, M),
+        M:assert(Head :- Body),
+        M:compile_predicates([Functor/2])
     ).
 
 
