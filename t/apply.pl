@@ -32,6 +32,10 @@ tilde :-
     atom_number(A, ~ is 3 + X),
     A == '8'.
 
+tilde_with_module :-
+    asserta(my_mod:foo([1,2,3])),
+    length(my_mod:foo(~), 3).
+
 dicts :-
     John = person{ name: "John", age: 27 },
     "John" == John $ name,

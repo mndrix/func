@@ -179,7 +179,8 @@ user:function_expansion(Term, M:Functor, true) :-
 
 
 % support foo(x,~,y) evaluation
-user:function_expansion(Term, Output, Goal) :-
+user:function_expansion(MTerm, Output, M:Goal) :-
+    strip_module(MTerm, M, Term), 
     wants_func,
     compound(Term),
 
