@@ -180,7 +180,12 @@ user:function_expansion(Term, M:Functor, true) :-
 
 % support foo(x,~,y) evaluation
 user:function_expansion(MTerm, Output, M:Goal) :-
-    strip_module(MTerm, M, Term), 
+    (MTerm = M:Term ->
+         true
+    ; % not module qualified ->
+    prolog_load_context(module, M),
+    Term = MTerm
+    ),
     wants_func,
     compound(Term),
 

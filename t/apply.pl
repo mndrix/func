@@ -1,4 +1,8 @@
 :- use_module(library(func)).
+
+:- prolog_load_context(directory, Dir),
+   asserta(user:file_search_path(here, Dir)).
+
 :- use_module(library(tap)).
 
 single :-
@@ -36,9 +40,10 @@ tilde_with_module :-
     asserta(my_mod:foo([1,2,3])),
     length(my_mod:foo(~), 3).
 
-tilde_with_unqual_module(todo(issue_16)) :-
-    use_module(foo),
-    foo:bar(a).
+% see issue 16
+tilde_with_unqual_module :- 
+    use_module(here(resources/foo)), %% see dummy file resources/foo.pl
+    foo:bar(a). 
 
 dicts :-
     John = person{ name: "John", age: 27 },
