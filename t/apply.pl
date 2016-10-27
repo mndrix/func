@@ -3,6 +3,8 @@
 :- prolog_load_context(directory, Dir),
    asserta(user:file_search_path(here, Dir)).
 
+my_mod:foo([1,2,3]).
+
 :- use_module(library(tap)).
 
 single :-
@@ -37,8 +39,8 @@ tilde :-
     A == '8'.
 
 tilde_with_module :-
-    asserta(my_mod:foo([1,2,3])),
-    length(my_mod:foo(~), 3).
+    length(my_mod:foo(~), N),
+    N == 3.
 
 % see issue 16
 tilde_with_unqual_module :- 
