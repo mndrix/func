@@ -179,13 +179,8 @@ user:function_expansion(Term, M:Functor, true) :-
 
 
 % support foo(x,~,y) evaluation
-user:function_expansion(MTerm, Output, M:Goal) :-
-    (MTerm = M:Term ->
-         true
-    ; % not module qualified ->
-    prolog_load_context(module, M),
-    Term = MTerm
-    ),
+user:function_expansion(MTerm, Output, MGoal) :-
+    ( MTerm=_:Term -> true; Term=MTerm ),
     wants_func,
     compound(Term),
 
@@ -199,4 +194,5 @@ user:function_expansion(MTerm, Output, M:Goal) :-
     Term =.. [Name|Args0],
     nth1(N, Args0, ~, Rest),
     nth1(N, Args, Output, Rest),
-    Goal =.. [Name|Args].
+    Goal =.. [Name|Args],
+    ( MTerm=Mod:_ -> MGoal=Mod:Goal; MGoal=Goal ).
