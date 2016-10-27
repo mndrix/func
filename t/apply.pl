@@ -36,6 +36,10 @@ tilde_with_module :-
     asserta(my_mod:foo([1,2,3])),
     length(my_mod:foo(~), 3).
 
+tilde_with_unqual_module(todo(issue_16)) :-
+    use_module(foo),
+    foo:bar(a).
+
 dicts :-
     John = person{ name: "John", age: 27 },
     "John" == John $ name,
