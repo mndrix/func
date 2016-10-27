@@ -1,3 +1,9 @@
+0.4.2 / 2016-10-27
+==================
+
+  * Fix tilde expansion of module qualified terms (Thanks edechter)
+
+
 0.4.1 / 2015-07-03
 ==================
 

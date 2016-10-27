@@ -1,8 +1,8 @@
 name(func).
 title('Function application and composition').
 
-version('0.4.1').
-download('https://github.com/mndrix/func/archive/v0.4.1.zip').
+version('0.4.2').
+download('https://github.com/mndrix/func/archive/v0.4.2.zip').
 
 requires(function_expansion).
 requires(list_util).
