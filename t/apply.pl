@@ -1,9 +1,9 @@
 :- use_module(library(func)).
 
-:- prolog_load_context(directory, Dir),
-   asserta(user:file_search_path(here, Dir)).
-
+% same predicate in different modules to catch module ambiguity
 my_mod:foo([1,2,3]).
+func:foo([1,2]).
+foo([1]).
 
 :- use_module(library(tap)).
 
@@ -43,9 +43,9 @@ tilde_with_module :-
     N == 3.
 
 % see issue 16
-tilde_with_unqual_module :- 
-    use_module(here(resources/foo)), %% see dummy file resources/foo.pl
-    foo:bar(a). 
+tilde_without_module :-
+    length(foo(~), N),
+    N == 1.
 
 dicts :-
     John = person{ name: "John", age: 27 },
